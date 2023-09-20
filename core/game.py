@@ -1,7 +1,7 @@
 import chess
 import chess.svg
 import aspose.words as aw
-from utils import *
+from utils.utils import *
 
 class Chess():
     def __new__(cls):
