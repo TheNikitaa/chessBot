@@ -43,23 +43,6 @@ class Chess():
         self.pageSetup.right_margin = 0
 
         self.doc.save('board.png')
-
-    # def convert(self):
-    #     if self.builder is None:
-    #         self.builder = aw.DocumentBuilder(self.doc)
-        
-    #     if self.pageSetup is None:
-    #         self.pageSetup = self.builder.page_setup
-
-    #     self.svg = chess.svg.board(self.board, size=550)
-    #     with open(f'{self.fileName}.svg', 'w') as file:
-    #         file.seek(0)
-    #         file.write(self.svg)
-    #         file.close()
-        
-    #     self.shape = self.builder.insert_image(f'{self.fileName}.svg')
-    #     load_setup(self.pageSetup, self.shape)
-    #     self.doc.save(f'{self.fileName}.png', aw.SaveFormat.PNG)
     
     def move(self, position: str): 
         try:
@@ -77,15 +60,6 @@ class Chess():
     def check_position(self):
         self.stockfish.set_fen_position(self.board.fen())
         return self.stockfish.get_evaluation()
-
-
-# game = Chess()
-# game.move('e4')
-# game.move('e5')
-# game.convert()
-# game.move('Nc3')
-# game.move('Nc6')
-# game.convert()
 
 
 # Реализовать методы шахов, матов и сохранения PGN

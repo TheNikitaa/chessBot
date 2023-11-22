@@ -401,4 +401,6 @@ pip-selfcheck.json
 # Built Visual Studio Code Extensions
 *.vsix
 
+board.png
+board.svg
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python,venv,django
