@@ -8,8 +8,8 @@ def load_setup(_pageSetup, _shape):
     _pageSetup.bottom_margin = 0
     _pageSetup.right_margin = 0
 
-def load_stockfish():
+def load_stockfish(strength, depth):
     stockfish = Stockfish()
-    stockfish.set_depth(10)
-    stockfish.set_skill_level(10)
+    stockfish.set_skill_level(strength)
+    stockfish.set_depth(depth)
     return stockfish
