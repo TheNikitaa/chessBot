@@ -1,6 +1,7 @@
 import random
 import chess
 import chess.svg
+import chess.pgn
 import aspose.words as aw
 from utils.utils import *
 
@@ -59,7 +60,26 @@ class Chess():
 
     def check_position(self):
         self.stockfish.set_fen_position(self.board.fen())
-        return self.stockfish.get_evaluation()
+        rate = self.stockfish.get_evaluation()
+        if rate['value'] < 0:
+            return (rate['value'], 0)
+        else:
+            return (rate['value'], 1)
+    
+    def state(self):
+        if self.board.is_checkmate():
+            return 1
+        elif self.board.is_stalemate():
+            return 2
+    
+    def save_pgn(self):
+        pgn = chess.pgn.Game()
+        with open("position.pgn", "w") as file:
+            file.seek(0)
+            file.write(f"{pgn}\n\n")
+            file.close()
+        
+    def choose_color(self):
+        pass
 
-
-# Реализовать методы шахов, матов и сохранения PGN
+# Реализовать метод выбора цвета
