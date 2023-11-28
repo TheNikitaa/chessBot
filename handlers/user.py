@@ -17,7 +17,7 @@ async def cmd_start(message: types.Message):
     )
 
 @router.message(Command("settings"))
-async def cmd_setting(message: types.Message, command: CommandObject):
+async def cmd_settings(message: types.Message, command: CommandObject):
     if command.args is None:
         await message.answer(
             "Выберите уровень сложности - <b>Easy, Medium, Hard</b>", reply_markup=settings_kb(),parse_mode=ParseMode.HTML
@@ -35,7 +35,7 @@ async def cmd_setting(message: types.Message, command: CommandObject):
         else:
             await message.answer(f"Несуществющий уровень сложности!!")
             return
-        await message.answer(f"Уровень сложности установлен на <b>{level[1]}</b>\n\t Приятной игры!",parse_mode=ParseMode.HTML)
+        await message.answer(f"Уровень сложности установлен на <b>{level[1]}</b>\n\t Приятной игры!", reply_markup=start_kb(), parse_mode=ParseMode.HTML)
     else:
         await message.answer("Вам нужно выбрать сложность. (пример Easy)")
 
@@ -56,14 +56,14 @@ async def cmd_game(message: types.Message, command: CommandObject):
     color = message.text.split()
     game.choose_color(color[1])
     if len(color) == 2:
-        await message.answer(f"<b>Игра началась.</b> Вы играете за <b>{color[1]}</bde>. Для хода используйте комманду /move 'ход'",parse_mode=ParseMode.HTML)
+        await message.answer(f"<b>Игра началась.</b> Вы играете за <b>{color[1]}</b>. Для хода используйте комманду /move 'ход'", parse_mode=ParseMode.HTML)
     else:
         await message.answer("Введите цвет корректно! (пример /game White)")
 
 
 @router.message(F.text.lower() == "об авторах")
-async def about(message: types.Message):
-    await message.reply(f"Создать бота - <b>@nikakimvv</b>\nСоздатель сайт - <b>@Timofey78900</b>", parse_mode=ParseMode.HTML)
+async def cmd_about(message: types.Message):
+    await message.reply(f"Создать бота - <b>@nikakimvv</b>\nСоздатель сайт - <b>@Timofey78900</b>", reply_markup=start_kb(), parse_mode=ParseMode.HTML)
 
 @router.message(Command("move"))
 async def cmd_move(message: types.Message, command: CommandObject):

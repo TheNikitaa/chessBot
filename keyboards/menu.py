@@ -5,7 +5,7 @@ def start_kb() -> types.ReplyKeyboardMarkup:
         [
             types.KeyboardButton(text="/settings"),
             types.KeyboardButton(text="/game"),
-            types.KeyboardButton(text="Об авторе")
+            types.KeyboardButton(text="Об авторах")
         ]
     ]
     keyboard = types.ReplyKeyboardMarkup(
