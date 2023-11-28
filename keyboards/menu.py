@@ -29,3 +29,17 @@ def settings_kb() -> types.ReplyKeyboardMarkup:
         one_time_keyboard=True
     )
     return keyboard
+
+def game_kb() -> types.ReplyKeyboardMarkup:
+    kb = [
+        [
+            types.KeyboardButton(text="/game White"),
+            types.KeyboardButton(text="/game Black")
+        ]
+    ]
+    keyboard = types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+    return keyboard

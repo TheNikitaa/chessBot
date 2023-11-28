@@ -14,6 +14,7 @@ class Chess():
     def __init__(self, strength=1, depth=1):
         self.stockfish = load_stockfish(strength, depth)
         self.board = chess.Board()
+        self.color = None
         self.doc = None
         self.svg = None
         self.builder = None
@@ -24,7 +25,10 @@ class Chess():
         return self.board
     
     def render_png(self):
-        self.svg = chess.svg.board(self.board, size=550)
+        if not self.color:
+            self.svg = chess.svg.board(self.board, size=550, flipped=True)
+        else:
+            self.svg = chess.svg.board(self.board, size=550)
 
         with open('board.svg', 'w') as file:
             file.seek(0)
@@ -71,15 +75,11 @@ class Chess():
             return 1
         elif self.board.is_stalemate():
             return 2
-    
-    def save_pgn(self):
-        pgn = chess.pgn.Game()
-        with open("position.pgn", "w") as file:
-            file.seek(0)
-            file.write(f"{pgn}\n\n")
-            file.close()
         
-    def choose_color(self):
-        pass
-
-# Реализовать метод выбора цвета
+    def choose_color(self, color=str):
+        if color == "White":
+            self.board.turn = chess.WHITE
+            self.color = 1
+        elif color == "Black":
+            self.board.turn = chess.BLACK
+            self.color = 0

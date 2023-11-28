@@ -8,6 +8,7 @@ from aiogram.enums import ParseMode
 
 router = Router()
 game = Chess()
+game_flag = 0
 
 @router.message(Command("start"))
 async def cmd_start(message: types.Message):
@@ -39,12 +40,25 @@ async def cmd_setting(message: types.Message, command: CommandObject):
         await message.answer("Вам нужно выбрать сложность. (пример Easy)")
 
 @router.message(Command("game"))
-async def cmd_game(message: types.Message):
-    pass
+async def cmd_game(message: types.Message, command: CommandObject):
+    if command.args is None:
+        await message.answer(
+            "Вы не выбрали цвет для игры - <b>White, Black</b>", reply_markup=game_kb(), parse_mode=ParseMode.HTML
+        )
+        return
+    global game_flag
+    game_flag = 1
+    color = message.text.split()
+    game.choose_color(color[1])
+    if len(color) == 2:
+        await message.answer(f"<b>Игра началась.</b> Вы играете за {color[1]}. Для хода используйте комманду /move 'ход'",parse_mode=ParseMode.HTML)
+    else:
+        await message.answer("Введите цвет корректно! (пример /game White)")
+
 
 @router.message(F.text.lower() == "об авторах")
 async def about(message: types.Message):
-    pass
+    await message.reply(f"Создать бота - <b>@nikakimvv</b>\nСоздатель сайт - <b>@Timofey78900</b>", parse_mode=ParseMode.HTML)
 
 @router.message(Command("move"))
 async def cmd_move(message: types.Message, command: CommandObject):
@@ -55,50 +69,61 @@ async def cmd_move(message: types.Message, command: CommandObject):
         return
     move = message.text.split()
     if len(move) == 2:
+        global game_flag
         a = game.move(move[1])
         if a:
             await message.reply("Неверный ход!")
             return
-        else:
+        elif game_flag:
             await message.answer(f"Вы сделали ход <b>{move[1]}</b>",
                                  parse_mode=ParseMode.HTML)
             game.move(move[1])
             if game.state():
-                game.save_pgn()
                 await message.answer("Объявлен мат! Вы победили!!")
                 game.render_png()
                 img = types.FSInputFile('board.png')
+                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
+                await message.answer_document(pgn)
+                game_flag = 0
                 return
             elif game.state() == 2:
-                game.save_pgn()
                 await message.answer("Объявлен пат! Ничья!!")
                 game.render_png()
                 img = types.FSInputFile('board.png')
+                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
+                await message.answer_document(pgn)
+                game_flag = 0
                 return
             stockfish_move = game.stockfish_move()
             if game.state():
-                game.save_pgn()
                 await message.answer("- Похоже я выйграл! Не плачь только!! xD")
                 game.render_png()
                 img = types.FSInputFile('board.png')
+                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
+                await message.answer_document(pgn)
+                game_flag = 0
                 return
             elif game.state() == 2:
-                game.save_pgn()
                 await message.answer("- Похоже я объявил пат.. Ничья?!")
                 game.render_png()
                 img = types.FSInputFile('board.png')
+                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
+                await message.answer_document(pgn)
+                game_flag = 0
                 return
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(1)
             await message.answer(f"- Я пожалуй пойду на <b>{stockfish_move}</b>", 
                                  parse_mode=ParseMode.HTML)
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(1)
             game.render_png()
             img = types.FSInputFile('board.png')
             await message.answer_photo(img)
+        else:
+            await message.answer("Вы не начали игру!")
     else:
         await message.answer("Невозможный ход. (пример Nc3)")
 
