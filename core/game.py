@@ -1,7 +1,6 @@
 import random
 import chess
 import chess.svg
-import chess.pgn
 import aspose.words as aw
 from utils.utils import *
 

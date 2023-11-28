@@ -47,11 +47,16 @@ async def cmd_game(message: types.Message, command: CommandObject):
         )
         return
     global game_flag
-    game_flag = 1
+    if game_flag:
+        game.board.reset_board()
+        game_flag = 0
+        await message.answer("Игра остановлена. Начинаю новую игру!")
+    if not game_flag:
+        game_flag = 1
     color = message.text.split()
     game.choose_color(color[1])
     if len(color) == 2:
-        await message.answer(f"<b>Игра началась.</b> Вы играете за {color[1]}. Для хода используйте комманду /move 'ход'",parse_mode=ParseMode.HTML)
+        await message.answer(f"<b>Игра началась.</b> Вы играете за <b>{color[1]}</bde>. Для хода используйте комманду /move 'ход'",parse_mode=ParseMode.HTML)
     else:
         await message.answer("Введите цвет корректно! (пример /game White)")
 
@@ -82,18 +87,14 @@ async def cmd_move(message: types.Message, command: CommandObject):
                 await message.answer("Объявлен мат! Вы победили!!")
                 game.render_png()
                 img = types.FSInputFile('board.png')
-                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
-                await message.answer_document(pgn)
                 game_flag = 0
                 return
             elif game.state() == 2:
                 await message.answer("Объявлен пат! Ничья!!")
                 game.render_png()
                 img = types.FSInputFile('board.png')
-                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
-                await message.answer_document(pgn)
                 game_flag = 0
                 return
             stockfish_move = game.stockfish_move()
@@ -101,18 +102,14 @@ async def cmd_move(message: types.Message, command: CommandObject):
                 await message.answer("- Похоже я выйграл! Не плачь только!! xD")
                 game.render_png()
                 img = types.FSInputFile('board.png')
-                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
-                await message.answer_document(pgn)
                 game_flag = 0
                 return
             elif game.state() == 2:
                 await message.answer("- Похоже я объявил пат.. Ничья?!")
                 game.render_png()
                 img = types.FSInputFile('board.png')
-                pgn = types.FSInputFile('position.pgn')
                 await message.answer_photo(img)
-                await message.answer_document(pgn)
                 game_flag = 0
                 return
             await asyncio.sleep(1)
