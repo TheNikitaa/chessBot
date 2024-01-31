@@ -31,7 +31,7 @@ async def cmd_settings(message: types.Message, command: CommandObject):
         elif level[1] == "Medium":
             game = Chess(10, 4)
         elif level[1] == "Hard":
-            game = Chess(15, 6)
+            game = Chess(30, 12)
         else:
             await message.answer(f"Несуществющий уровень сложности!!")
             return
@@ -82,7 +82,6 @@ async def cmd_move(message: types.Message, command: CommandObject):
         elif game_flag:
             await message.answer(f"Вы сделали ход <b>{move[1]}</b>",
                                  parse_mode=ParseMode.HTML)
-            game.move(move[1])
             if game.state():
                 await message.answer("Объявлен мат! Вы победили!!")
                 game.render_png()
@@ -112,10 +111,9 @@ async def cmd_move(message: types.Message, command: CommandObject):
                 await message.answer_photo(img)
                 game_flag = 0
                 return
-            await asyncio.sleep(1)
             await message.answer(f"- Я пожалуй пойду на <b>{stockfish_move}</b>", 
                                  parse_mode=ParseMode.HTML)
-            await asyncio.sleep(1)
+            game.print_moves()
             game.render_png()
             img = types.FSInputFile('board.png')
             await message.answer_photo(img)

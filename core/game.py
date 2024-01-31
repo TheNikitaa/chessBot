@@ -57,9 +57,8 @@ class Chess():
     def stockfish_move(self):
         self.stockfish.set_fen_position(self.board.fen())
         moves = self.stockfish.get_top_moves(num_top_moves=3)
-        rnd = random.sample(moves, 1)
-        self.board.push_uci(rnd[0]['Move'])
-        return rnd[0]['Move']
+        self.board.push_uci(moves[0]['Move'])
+        return moves[0]['Move']
 
     def check_position(self):
         self.stockfish.set_fen_position(self.board.fen())
@@ -82,3 +81,7 @@ class Chess():
         elif color == "Black":
             self.board.turn = chess.BLACK
             self.color = 0
+    
+    def print_moves(self):
+        for move in self.board.move_stack:
+            print(move.uci() + "  ")
