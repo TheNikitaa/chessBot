@@ -7,7 +7,6 @@ from config.cfg import load_config
 logging.basicConfig(level=logging.INFO)
 config = load_config()
 bot_token = config.tg_bot.token
-admin = config.tg_bot.admin_id
 
 async def main():
     bot = Bot(token=bot_token)

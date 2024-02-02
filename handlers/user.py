@@ -5,6 +5,10 @@ from aiogram.filters.command import Command, CommandObject
 from aiogram import types
 from keyboards.menu import *
 from aiogram.enums import ParseMode
+from config.cfg import load_config
+
+config = load_config()
+admin_id = config.tg_bot.admin_id
 
 router = Router()
 game = Chess()
@@ -124,10 +128,13 @@ async def cmd_move(message: types.Message, command: CommandObject):
 
 @router.message(Command("rate"))
 async def cmd_rate(message: types.Message):
-    rate = game.check_position()
-    if rate[1]:
-        await message.answer(f"Оценка позиции в пользу <b>белых:</b> {rate[0]}", 
-                             parse_mode=ParseMode.HTML)
+    if str(message.from_user.id) == admin_id:
+        rate = game.check_position()
+        if rate[1]:
+            await message.answer(f"Оценка позиции в пользу <b>белых:</b> {rate[0]}", 
+                                parse_mode=ParseMode.HTML)
+        else:
+            await message.answer(f"Оценка позиции в пользу <b>черных:</b> {rate[0]}",
+                                parse_mode=ParseMode.HTML)
     else:
-        await message.answer(f"Оценка позиции в пользу <b>черных:</b> {rate[0]}",
-                             parse_mode=ParseMode.HTML)
+        await message.reply(f"Что-то не так {message.from_user.id} {admin_id}")
