@@ -1,0 +1,5 @@
+chess
+stockfish
+aspose-words
+environs
+python-dotenv
