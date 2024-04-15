@@ -137,4 +137,5 @@ async def cmd_rate(message: types.Message):
             await message.answer(f"Оценка позиции в пользу <b>черных:</b> {rate[0]}",
                                 parse_mode=ParseMode.HTML)
     else:
-        await message.reply(f"Что-то не так {message.from_user.id} {admin_id}")
+        await message.reply(f"<b>Ошибка доступа! У вас нет прав администратора!</b>",
+                                parse_mode=ParseMode.HTML)
