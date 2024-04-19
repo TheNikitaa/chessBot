@@ -128,7 +128,7 @@ async def cmd_move(message: types.Message, command: CommandObject):
 
 @router.message(Command("rate"))
 async def cmd_rate(message: types.Message):
-    if str(message.from_user.id) == admin_id:
+    if str(message.from_user.id) == admin_id and game_flag:
         rate = game.check_position()
         if rate[1]:
             await message.answer(f"Оценка позиции в пользу <b>белых:</b> {rate[0]}", 
@@ -137,5 +137,5 @@ async def cmd_rate(message: types.Message):
             await message.answer(f"Оценка позиции в пользу <b>черных:</b> {rate[0]}",
                                 parse_mode=ParseMode.HTML)
     else:
-        await message.reply(f"<b>Ошибка доступа! У вас нет прав администратора!</b>",
+        await message.reply(f"<b>Ошибка доступа! У вас нет прав администратора или игра не началась!</b>",
                                 parse_mode=ParseMode.HTML)
